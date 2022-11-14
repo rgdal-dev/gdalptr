@@ -4,12 +4,12 @@
 \name{gdalptr-package}
 \alias{gdalptr}
 \alias{gdalptr-package}
-\title{gdalptr: What the Package Does (One Line, Title Case)}
+\title{gdalptr: Pointer Fun with Mikey}
 \description{
-What the package does (one paragraph).
+Just messing around learning from paleolimbot/radbc.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Michael Sumner \email{first.last@example.com}
 
 }
 \keyword{internal}
