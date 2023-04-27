@@ -69,6 +69,6 @@ pattern <- regex(
 
 stopifnot(str_detect(init, pattern))
 init %>%
-  str_replace(pattern, header) %>%
+  str_replace(pattern, header )%>%
   write_file("src/init.c")
 

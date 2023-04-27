@@ -41,7 +41,7 @@ static inline SEXP gdalptr_allocate_xptr(SEXP shelter_sexp = R_NilValue) {
   }
 
   memset(ptr, 0, sizeof(T));
-  SEXP xptr = PROTECT(R_MakeExternalPtr(ptr, R_NilValue, shelter_sexp));
+  SEXP xptr = PROTECT(R_MakeExternalPtr((void *)ptr, R_NilValue, shelter_sexp));
   SEXP xptr_class = PROTECT(Rf_allocVector(STRSXP, 2));
   SET_STRING_ELT(xptr_class, 0, Rf_mkChar(gdalptr_xptr_class<T>()));
   SET_STRING_ELT(xptr_class, 1, Rf_mkChar("gdalptr_xptr"));
@@ -79,19 +79,20 @@ static inline const char* gdalptr_as_const_char(SEXP sexp) {
 }
 
 
-extern "C" SEXP GdalPtrLoadDataset(SEXP dsn_name_sexp, SEXP driver_name_sexp) {
-  const char* driver_name = gdalptr_as_const_char(driver_name_sexp);
-  const char* dsn_name = gdalptr_as_const_char(dsn_name_sexp);
-
-  SEXP dataset_xptr = PROTECT(gdalptr_allocate_xptr<GDALDataset>());
-  auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
-
-  //radbc_global_error_reset();
-  // int status =
-  //   AdbcLoadDriver(driver_name, entrypoint, ADBC_VERSION_1_0_0, driver, &global_error_);
-  // radbc_global_error_stop(status, "RAdbcLoadDriver()");
-  GDALAllRegister();
-  dataset = (GDALDataset* ) GDALOpen(dsn_name, GA_ReadOnly);
-  UNPROTECT(1);
-  return dataset_xptr;
+static inline int gdalptr_as_int(SEXP sexp) {
+  if (Rf_length(sexp) == 1) {
+    switch (TYPEOF(sexp)) {
+    case REALSXP:
+      return REAL(sexp)[0];
+    case INTSXP:
+      return INTEGER(sexp)[0];
+    }
+  }
+  
+  Rf_error("Expected integer(1) or double(1) for conversion to int");
 }
+// 
+// static inline SEXP gdalptr_wrap_status(AdbcStatusCode code) {
+//   return Rf_ScalarInteger(code);
+// }
+

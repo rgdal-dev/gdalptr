@@ -11,3 +11,4 @@ proj_conf_test
 config.status
 src/*.o
 src/*.so
+gdalwmscache

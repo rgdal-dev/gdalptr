@@ -8,3 +8,4 @@
 ^proj_conf_test.c$
 ^proj_conf_test$
 ^config.status$
+^gdalwmscache$
