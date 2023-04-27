@@ -9,3 +9,4 @@
 ^proj_conf_test$
 ^config.status$
 ^gdalwmscache$
+^README\.Rmd$

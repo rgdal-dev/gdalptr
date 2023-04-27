@@ -2,4 +2,5 @@
 
 export(GDALDataset)
 export(GDALGetInfo)
+export(GDALOpen)
 useDynLib(gdalptr, .registration = TRUE)

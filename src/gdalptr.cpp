@@ -22,7 +22,7 @@ extern "C" SEXP GdalPtrDataset() {
   SEXP dataset_xptr = PROTECT(gdalptr_allocate_xptr<GDALDataset>());
   R_RegisterCFinalizer(dataset_xptr, &finalize_dataset_xptr);
   auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
- 
+  
   UNPROTECT(1);
   return dataset_xptr;
 }
@@ -33,23 +33,25 @@ extern "C" SEXP GdalPtrOpen(SEXP dataset_xptr, SEXP dsn_name_sexp) {
   auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
   dataset =  (GDALDataset *)GDALOpen(dsn_name, GA_ReadOnly);
   
+  Rprintf("Raster count: %i\n", (int) dataset->GetRasterCount()); 
   return dataset_xptr;
 }
 
 
 extern "C" SEXP GdalPtrGetInfo(SEXP dataset_xptr) {
-  auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
+  GDALAllRegister();
+  GDALDataset* dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
   
   if (dataset == nullptr) {
     Rprintf("it null!\n"); 
   }
-  int rc;
-   
+  int rc = (int) dataset->GetRasterCount();
+  
   //Rprintf("%s\n", dataset->GetDescription()); 
   // // Rprintf("%s\n", desc); 
   // 
-  rc = (int)(dataset->GetRasterXSize());
-  //  Rprintf("%s\n", dataset->GetDriverName()); 
+  
+  Rprintf("Raster version info: %s\n", GDALVersionInfo("--version")); 
   return Rf_ScalarInteger(rc);
 }
 
