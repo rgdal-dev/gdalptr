@@ -1,9 +1,4 @@
-#' Title
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' get a pointer to the abstract GDALDataset (not much use, see gdalptr::GDALOpen)
 GDALDataset <- function() {
   .Call("GdalPtrDataset")
 }
@@ -17,18 +12,22 @@ GDALDataset <- function() {
 #' @export
 #'
 #' @examples
+#' dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
+#' ds <- GDALOpen(dsn)
+#' GDALGetInfo(ds)
 GDALOpen<- function(dsn = NULL) {
-  
-  ds <- GDALDataset()
   if (is.null(dsn)) dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
   if (file.exists(dsn)) dsn <- normalizePath(dsn)
-    .Call("GdalPtrOpen", ds, dsn)
+  if (!nzchar(dsn[1]) || is.na(dsn[1])) stop("invalid dsn")
+  ds <- GDALDataset()
+  
+    .Call("GdalPtrOpen", ds, dsn[1])
 }
 
 
-#' Title
+#' Get the number of columns of  data set opened with gdalptr::GDALOpen()
 #'
-#' @param x
+#' @param x external pointer returned by gdalptr::GDALOpen()
 #'
 #' @return
 #' @export

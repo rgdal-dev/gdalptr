@@ -29,5 +29,12 @@ This is a basic example doesnt work:
 library(gdalptr)
 dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
 xptr <- GDALOpen(dsn)
-GDALGetInfo(xptr)  ## this should tell us the raster count (1)
+GDALGetInfo(xptr)  ## this should tell us the number of columns (1)
+```
+
+when we use Rcpp XPtr it works
+
+```{r Xptr}
+xptr_ds <- xptr_GDALOpen(dsn)
+xptr_GDALGetRasterSize(xptr_ds)
 ```

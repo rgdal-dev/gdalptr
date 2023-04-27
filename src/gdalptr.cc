@@ -5,23 +5,18 @@
 
 
 static void finalize_dataset_xptr(SEXP dataset_xptr) {
-  auto dataset = reinterpret_cast<GDALDataset*>(R_ExternalPtrAddr(dataset_xptr));
+  auto* dataset = reinterpret_cast<GDALDataset*>(R_ExternalPtrAddr(dataset_xptr));
   if (dataset == nullptr) {
     return;
   }
-  
-  // if (database->private_data != nullptr) {
-  //   int status = AdbcDatabaseRelease(database, &global_error_);
-  //   adbc_global_error_warn(status, "finalize_database_xptr()");
-  // }
-  
+
   gdalptr_xptr_default_finalize<GDALDataset>(dataset_xptr);
 }
 
 extern "C" SEXP GdalPtrDataset() {
   SEXP dataset_xptr = PROTECT(gdalptr_allocate_xptr<GDALDataset>());
   R_RegisterCFinalizer(dataset_xptr, &finalize_dataset_xptr);
-  auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
+  auto* dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
   
   UNPROTECT(1);
   return dataset_xptr;
@@ -33,25 +28,23 @@ extern "C" SEXP GdalPtrOpen(SEXP dataset_xptr, SEXP dsn_name_sexp) {
   auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
   dataset =  (GDALDataset *)GDALOpen(dsn_name, GA_ReadOnly);
   
-  Rprintf("Raster count: %i\n", (int) dataset->GetRasterCount()); 
+  //Rprintf("Raster count: %i\n", (int) dataset->GetRasterCount()); 
   return dataset_xptr;
 }
 
 
 extern "C" SEXP GdalPtrGetInfo(SEXP dataset_xptr) {
   GDALAllRegister();
-  GDALDataset* dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
+  
+  auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
   
   if (dataset == nullptr) {
     Rprintf("it null!\n"); 
   }
-  int rc = (int) dataset->GetRasterCount();
+  int nc = (int) dataset->GetRasterXSize();
+  int nr = (int) dataset->GetRasterYSize();
   
-  //Rprintf("%s\n", dataset->GetDescription()); 
-  // // Rprintf("%s\n", desc); 
-  // 
-  
-  Rprintf("Raster version info: %s\n", GDALVersionInfo("--version")); 
-  return Rf_ScalarInteger(rc);
+  //Rprintf("Raster version info: %s\n", GDALVersionInfo("--version")); 
+  return Rf_ScalarInteger(nc);
 }
 
