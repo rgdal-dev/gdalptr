@@ -4,17 +4,17 @@ GDALDataset <- function() {
 }
 
 
-#' Title
+#' Open a GDAL dataset from a dsn
 #'
-#' @param a
+#' @param dsn character, description of a file path, url, etc. 
 #'
-#' @return
+#' @return an external pointer 
 #' @export
 #'
 #' @examples
 #' dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
 #' ds <- GDALOpen(dsn)
-#' GDALGetInfo(ds)
+#' GDALGetRasterSize(ds)
 GDALOpen<- function(dsn = NULL) {
   if (is.null(dsn)) dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
   if (file.exists(dsn)) dsn <- normalizePath(dsn)
@@ -29,13 +29,28 @@ GDALOpen<- function(dsn = NULL) {
 #'
 #' @param x external pointer returned by gdalptr::GDALOpen()
 #'
-#' @return
+#' @return integer vector ncol,nrow
 #' @export
 #'
 #' @examples
-GDALGetInfo <- function(x) {
-  .Call("GdalPtrGetInfo", x)
+#' dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
+#' ds <- GDALOpen(dsn)
+#' GDALGetRasterSize(ds)
+GDALGetRasterSize <- function(x) {
+  .Call("GdalPtrGetRasterSize", x)
 }
+
+#' Get the GDAL version string
+#' 
+#' @return character vector describing GDAL version
+#' @export
+#'
+#' @examples
+#' GDALVersion()
+GDALVersion <- function() {
+  .Call("GdalVersion")
+}
+
 new_env <- function() {
   new.env(parent = emptyenv())
 }

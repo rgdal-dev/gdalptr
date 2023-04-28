@@ -34,16 +34,18 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP GdalPtrDataset();
-RcppExport SEXP GdalPtrGetInfo(SEXP);
-RcppExport SEXP GdalPtrOpen(SEXP, SEXP);
+RcppExport SEXP GdalPtrDataset(void);
+RcppExport SEXP GdalPtrGetRasterSize(void *);
+RcppExport SEXP GdalPtrOpen(void *, void *);
+RcppExport SEXP GdalVersion(void);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gdalptr_xptr_GDALOpen", (DL_FUNC) &_gdalptr_xptr_GDALOpen, 2},
     {"_gdalptr_xptr_GDALGetRasterSize", (DL_FUNC) &_gdalptr_xptr_GDALGetRasterSize, 1},
-    {"GdalPtrDataset", (DL_FUNC) &GdalPtrDataset, 0},
-    {"GdalPtrGetInfo", (DL_FUNC) &GdalPtrGetInfo, 1},
-    {"GdalPtrOpen",    (DL_FUNC) &GdalPtrOpen,    2},
+    {"GdalPtrDataset",       (DL_FUNC) &GdalPtrDataset,       0},
+    {"GdalPtrGetRasterSize", (DL_FUNC) &GdalPtrGetRasterSize, 1},
+    {"GdalPtrOpen",          (DL_FUNC) &GdalPtrOpen,          2},
+    {"GdalVersion",          (DL_FUNC) &GdalVersion,          0},
     {NULL, NULL, 0}
 };
 

@@ -10,3 +10,4 @@
 ^config.status$
 ^gdalwmscache$
 ^README\.Rmd$
+^LICENSE\.md$

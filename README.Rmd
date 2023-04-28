@@ -18,23 +18,50 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of gdalptr is to learn about raw pointer handling and interface building from [radbc](https://github.com/paleolimbot/radbc/). 
+The goal of gdalptr is to learn about raw pointer handling and interface building from [radbc](https://github.com/paleolimbot/radbc/) and other fab projects by Dewey Dunnington. 
 
 
-## Example that doesn't work
+## Basic example
 
-This is a basic example doesnt work: 
+This is a basic example, first with R's C API (note use of   R_SetExternalPtrAddr in the source). 
 
 ```{r example}
 library(gdalptr)
 dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
 xptr <- GDALOpen(dsn)
-GDALGetInfo(xptr)  ## this should tell us the number of columns (1)
+GDALGetRasterSize(xptr)  
 ```
 
-when we use Rcpp XPtr it works
+or with Rcpp (which makes the pointer handling easier in the source). 
 
 ```{r Xptr}
 xptr_ds <- xptr_GDALOpen(dsn)
 xptr_GDALGetRasterSize(xptr_ds)
+```
+
+We can have some fun with this, the dsn package has a few good online examples. 
+
+```{r fun}
+## remotes::install_github("hypertidy/dsn")
+
+GDALGetRasterSize(GDALOpen(dsn::gebco22()))
+
+GDALGetRasterSize(GDALOpen(dsn::wms_arcgis_mapserver_tms()))
+
+```                  
+
+
+With an upcoming GDAL release (3.7), we can even target different aspects via GDAL's virtual driver, *without constructing actual VRT or opening the dataset*. 
+
+```{r gdalvrt}
+## because I'm working with the dev source
+GDALVersion()
+
+## we can target an overview in this massive tile dataset
+GDALGetRasterSize(GDALOpen(sprintf("vrt://%s?ovr=12", dsn::wms_arcgis_mapserver_tms())))
+
+
+GDALGetRasterSize(GDALOpen(sprintf("vrt://%s?ovr=6", dsn::wms_arcgis_mapserver_tms())))
+
+GDALGetRasterSize(GDALOpen(sprintf("vrt://%s?ovr=0", dsn::wms_arcgis_mapserver_tms())))
 ```

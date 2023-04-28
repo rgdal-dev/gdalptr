@@ -9,7 +9,7 @@
 Just messing around learning from paleolimbot/radbc.
 }
 \author{
-\strong{Maintainer}: Michael Sumner \email{first.last@example.com}
+\strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com}
 
 }
 \keyword{internal}

@@ -1,3 +1,2 @@
 PKG_CPPFLAGS=  -DHAVE_PROJ_H -I/usr/include
 PKG_LIBS= -L/usr/lib/x86_64-linux-gnu -lgdal -lproj 
-CXX_STD=CXX11

@@ -2,18 +2,21 @@
 % Please edit documentation in R/gdalptr.R
 \name{GDALOpen}
 \alias{GDALOpen}
-\title{Title}
+\title{Open a GDAL dataset from a dsn}
 \usage{
 GDALOpen(dsn = NULL)
 }
 \arguments{
-\item{a}{}
+\item{dsn}{character, description of a file path, url, etc.}
+}
+\value{
+an external pointer
 }
 \description{
-Title
+Open a GDAL dataset from a dsn
 }
 \examples{
 dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
 ds <- GDALOpen(dsn)
-GDALGetInfo(ds)
+GDALGetRasterSize(ds)
 }
