@@ -2,6 +2,7 @@
 
 export(GDALGetRasterSize)
 export(GDALOpen)
+export(GDALVSIReadDirRecursive)
 export(GDALVersion)
 export(xptr_GDALGetRasterSize)
 export(xptr_GDALOpen)

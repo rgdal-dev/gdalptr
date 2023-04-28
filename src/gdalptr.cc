@@ -13,6 +13,7 @@ static void finalize_dataset_xptr(SEXP dataset_xptr) {
   gdalptr_xptr_default_finalize<GDALDataset>(dataset_xptr);
 }
 
+// dataset
 extern "C" SEXP GdalPtrDataset() {
   SEXP dataset_xptr = PROTECT(gdalptr_allocate_xptr<GDALDataset>());
   R_RegisterCFinalizer(dataset_xptr, &finalize_dataset_xptr);
@@ -48,6 +49,29 @@ extern "C" SEXP GdalPtrGetRasterSize(SEXP dataset_xptr) {
   return result;
 }
 
+extern "C" SEXP GdalVSIReadDirRecursive(SEXP dsn_name_sexp) {
+  const char* dsn_name = gdalptr_as_const_char(dsn_name_sexp);      
+   
+  char** VSI_paths  = VSIReadDirRecursive(dsn_name);
+  
+  int ipath = 0; // iterate to count
+  while (VSI_paths && VSI_paths[ipath] != NULL) {
+    ipath++;
+  }
+  SEXP result = PROTECT(Rf_allocVector(STRSXP, ipath));
+  
+  for (int i = 0; i < ipath; i++) {
+    SET_STRING_ELT(result, i, Rf_mkChar(VSI_paths[i]));
+  }
+  
+  CSLDestroy(VSI_paths);
+  UNPROTECT(1); 
+  return result;
+}
+
+
+
+// standalone
 extern "C" SEXP GdalVersion() {
 
   SEXP result = PROTECT(Rf_allocVector(STRSXP, 1));

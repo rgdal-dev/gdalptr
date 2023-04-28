@@ -51,6 +51,31 @@ GDALVersion <- function() {
   .Call("GdalVersion")
 }
 
+
+#' List VSI recursively 
+#' 
+#' I.e. get the file list from a zip file, so we can construct a dsn. 
+#'
+#' @param vsiname character string to GDAL source
+#'
+#' @return character vector of source contents
+#' @export
+#'
+#' @examples
+#' url <- file.path("/vsitar//vsicurl", 
+#'        "https://cran.r-project.org/src/contrib/Archive/pixmap/pixmap_0.4-11.tar.gz")
+#' if (interactive()) {
+#'   files <- try(GDALVSIReadDirRecursive(url))
+#'   if (!inherits(files, "try-error")) {
+#'   dsn <- file.path(url, grep("logo.ppm", files, value = TRUE))
+#'    ppm <- GDALOpen(dsn)
+#'    GDALGetRasterSize(ppm) 
+#'    
+#'    }
+#'   }
+GDALVSIReadDirRecursive <- function(vsiname) {
+  .Call("GdalVSIReadDirRecursive", vsiname)
+}
 new_env <- function() {
   new.env(parent = emptyenv())
 }
