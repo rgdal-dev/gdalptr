@@ -17,6 +17,14 @@ I.e. get the file list from a zip file, so we can construct a dsn.
 }
 \examples{
 url <- file.path("/vsitar//vsicurl", 
-       "https://cran.r-project.org/src/contrib/Archive/MASS/MASS_7.3-0.tar.gz")
-GDALVSIReadDirRecursive(url)
+       "https://cran.r-project.org/src/contrib/Archive/pixmap/pixmap_0.4-11.tar.gz")
+if (interactive()) {
+  files <- try(GDALVSIReadDirRecursive(url))
+  if (!inherits(files, "try-error")) {
+  dsn <- file.path(url, grep("logo.ppm", files, value = TRUE))
+   ppm <- GDALOpen(dsn)
+   GDALGetRasterSize(ppm) 
+   
+   }
+  }
 }

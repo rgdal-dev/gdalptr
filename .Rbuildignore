@@ -11,3 +11,4 @@
 ^gdalwmscache$
 ^README\.Rmd$
 ^LICENSE\.md$
+^\.github$
