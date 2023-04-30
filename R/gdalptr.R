@@ -15,13 +15,13 @@ GDALDataset <- function() {
 #' dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
 #' ds <- GDALOpen(dsn)
 #' GDALGetRasterSize(ds)
-GDALOpen<- function(dsn = NULL) {
+GDALOpen<- function(dsn = NULL, read_only = TRUE) {
   if (is.null(dsn)) dsn <- system.file("extdata/volcano_gcp.tif", package = "gdalptr", mustWork  = TRUE)
   if (file.exists(dsn)) dsn <- normalizePath(dsn)
   if (!nzchar(dsn[1]) || is.na(dsn[1])) stop("invalid dsn")
   ds <- GDALDataset()
   
-    .Call("GdalPtrGDALOpen", ds, dsn[1])
+    .Call("GdalPtrGDALOpen", ds, dsn[1], read_only[1L])
 }
 
 
@@ -40,6 +40,10 @@ GDALGetRasterSize <- function(x) {
   .Call("GdalPtrGetRasterSize", x)
 }
 
+
+GDALRasterIO <- function(x, window, data = NULL, resample_algo = "nearestneighbour") {
+  .Call("GdalPtrRasterIO", x, as.integer(window), data, resample_algo)
+}
 #' Get the GDAL version string
 #' 
 #' @return character vector describing GDAL version

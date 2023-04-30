@@ -4,7 +4,7 @@
 \alias{GDALOpen}
 \title{Open a GDAL dataset from a dsn}
 \usage{
-GDALOpen(dsn = NULL)
+GDALOpen(dsn = NULL, read_only = TRUE)
 }
 \arguments{
 \item{dsn}{character, description of a file path, url, etc.}
