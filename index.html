@@ -63,7 +63,7 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of gdalptr is to learn about raw pointer handling and interface building from <a href="https://github.com/paleolimbot/radbc/" class="external-link">radbc</a> and other fab projects by Dewey Dunnington.</p>
+<p>The goal of gdalptr is to learn about raw pointer handling and interface building from <a href="https://github.com/paleolimbot/radbc/" class="external-link">adbcdrivermanager</a> and other fab projects by Dewey Dunnington.</p>
 <div class="section level2">
 <h2 id="basic-example">Basic example<a class="anchor" aria-label="anchor" href="#basic-example"></a>
 </h2>
@@ -74,14 +74,9 @@
 <span><span class="va">xptr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/GDALOpen.html">GDALOpen</a></span><span class="op">(</span><span class="va">dsn</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/GDALGetRasterSize.html">GDALGetRasterSize</a></span><span class="op">(</span><span class="va">xptr</span><span class="op">)</span>  </span>
 <span><span class="co">#&gt; [1] 20 15</span></span></code></pre></div>
-<p>or with Rcpp (which makes the pointer handling easier in the source).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xptr_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/xptr_GDALOpen.html">xptr_GDALOpen</a></span><span class="op">(</span><span class="va">dsn</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0</span></span>
-<span><span class="fu"><a href="reference/xptr_GDALGetRasterSize.html">xptr_GDALGetRasterSize</a></span><span class="op">(</span><span class="va">xptr_ds</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 20 15</span></span></code></pre></div>
+<p>(there was some work with the Rcpp wrapper left in branch ‘rcpp-0.0.1’).</p>
 <p>We can have some fun with this, the dsn package has a few good online examples.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## remotes::install_github("hypertidy/dsn")</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/GDALGetRasterSize.html">GDALGetRasterSize</a></span><span class="op">(</span><span class="fu"><a href="reference/GDALOpen.html">GDALOpen</a></span><span class="op">(</span><span class="fu">dsn</span><span class="fu">::</span><span class="fu">gebco22</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -89,6 +84,12 @@
 <span></span>
 <span><span class="fu"><a href="reference/GDALGetRasterSize.html">GDALGetRasterSize</a></span><span class="op">(</span><span class="fu"><a href="reference/GDALOpen.html">GDALOpen</a></span><span class="op">(</span><span class="fu">dsn</span><span class="fu">::</span><span class="fu">wms_arcgis_mapserver_tms</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 33554432 33554432</span></span></code></pre></div>
+<p>The recursive VSI listing will tell us what files live in a tarball, a zip, a url endpoint, etc</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tarball</span> <span class="op">&lt;-</span>  <span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/cache.html" class="external-link">cache_list</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">fullpath</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/GDALVSIReadDirRecursive.html">GDALVSIReadDirRecursive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsitar"</span>, <span class="va">tarball</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  chr [1:197] "jsonlite/" "jsonlite/NAMESPACE" "jsonlite/LICENSE" ...</span></span></code></pre></div>
 <p>With an upcoming GDAL release (3.7), we can even target different aspects via GDAL’s virtual driver, <em>without constructing actual VRT or opening the dataset</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## because I'm working with the dev source</span></span>
