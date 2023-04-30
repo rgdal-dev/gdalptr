@@ -42,7 +42,6 @@ AC_CONFIG_SRCDIR([src/gdalptr.cc])
 #ifdef HAVE370
 #ifdef HAVE380
 #ifdef HAVE390
-#ifdef RCPP_USE_GLOBAL_ROSTREAM
 #ifndef HAVE380
 #ifndef NO_GDAL_CPP_HEADERS
 

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of gdalptr is to learn about raw pointer handling and interface building from [radbc](https://github.com/paleolimbot/radbc/) and other fab projects by Dewey Dunnington. 
+The goal of gdalptr is to learn about raw pointer handling and interface building from [adbcdrivermanager](https://github.com/paleolimbot/radbc/) and other fab projects by Dewey Dunnington. 
 
 
 ## Basic example
@@ -32,12 +32,8 @@ xptr <- GDALOpen(dsn)
 GDALGetRasterSize(xptr)  
 ```
 
-or with Rcpp (which makes the pointer handling easier in the source). 
+(there was some work with the Rcpp wrapper left in branch 'rcpp-0.0.1'). 
 
-```{r Xptr}
-xptr_ds <- xptr_GDALOpen(dsn)
-xptr_GDALGetRasterSize(xptr_ds)
-```
 
 We can have some fun with this, the dsn package has a few good online examples. 
 
@@ -48,7 +44,17 @@ GDALGetRasterSize(GDALOpen(dsn::gebco22()))
 
 GDALGetRasterSize(GDALOpen(dsn::wms_arcgis_mapserver_tms()))
 
+
 ```                  
+
+The recursive VSI listing will tell us what files live in a tarball, a zip, a url endpoint, etc
+
+```{r recursive}
+tarball <-  pak::cache_list()$fullpath[1]
+fs <- GDALVSIReadDirRecursive(file.path("/vsitar", tarball))
+str(fs)
+```
+
 
 
 With an upcoming GDAL release (3.7), we can even target different aspects via GDAL's virtual driver, *without constructing actual VRT or opening the dataset*. 

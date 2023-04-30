@@ -23,7 +23,7 @@ extern "C" SEXP GdalPtrDataset() {
   return dataset_xptr;
 }
 
-extern "C" SEXP GdalPtrOpen(SEXP dataset_xptr, SEXP dsn_name_sexp) {
+extern "C" SEXP GdalPtrGDALOpen(SEXP dataset_xptr, SEXP dsn_name_sexp) {
   GDALAllRegister();
   const char* dsn_name = gdalptr_as_const_char(dsn_name_sexp);      
   auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
@@ -49,7 +49,7 @@ extern "C" SEXP GdalPtrGetRasterSize(SEXP dataset_xptr) {
   return result;
 }
 
-extern "C" SEXP GdalVSIReadDirRecursive(SEXP dsn_name_sexp) {
+extern "C" SEXP GdalPtrVSIReadDirRecursive(SEXP dsn_name_sexp) {
   const char* dsn_name = gdalptr_as_const_char(dsn_name_sexp);      
    
   char** VSI_paths  = VSIReadDirRecursive(dsn_name);
@@ -72,7 +72,7 @@ extern "C" SEXP GdalVSIReadDirRecursive(SEXP dsn_name_sexp) {
 
 
 // standalone
-extern "C" SEXP GdalVersion() {
+extern "C" SEXP GdalPtrGDALVersionInfo() {
 
   SEXP result = PROTECT(Rf_allocVector(STRSXP, 1));
   SET_STRING_ELT(result, 0, Rf_mkChar(GDALVersionInfo("--version")));

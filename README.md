@@ -7,8 +7,8 @@
 <!-- badges: end -->
 
 The goal of gdalptr is to learn about raw pointer handling and interface
-building from [radbc](https://github.com/paleolimbot/radbc/) and other
-fab projects by Dewey Dunnington.
+building from [adbcdrivermanager](https://github.com/paleolimbot/radbc/)
+and other fab projects by Dewey Dunnington.
 
 ## Basic example
 
@@ -23,14 +23,7 @@ GDALGetRasterSize(xptr)
 #> [1] 20 15
 ```
 
-or with Rcpp (which makes the pointer handling easier in the source).
-
-``` r
-xptr_ds <- xptr_GDALOpen(dsn)
-#> 0
-xptr_GDALGetRasterSize(xptr_ds)
-#> [1] 20 15
-```
+(there was some work with the Rcpp wrapper left in branch ‘rcpp-0.0.1’).
 
 We can have some fun with this, the dsn package has a few good online
 examples.
@@ -43,6 +36,16 @@ GDALGetRasterSize(GDALOpen(dsn::gebco22()))
 
 GDALGetRasterSize(GDALOpen(dsn::wms_arcgis_mapserver_tms()))
 #> [1] 33554432 33554432
+```
+
+The recursive VSI listing will tell us what files live in a tarball, a
+zip, a url endpoint, etc
+
+``` r
+tarball <-  pak::cache_list()$fullpath[1]
+fs <- GDALVSIReadDirRecursive(file.path("/vsitar", tarball))
+str(fs)
+#>  chr [1:197] "jsonlite/" "jsonlite/NAMESPACE" "jsonlite/LICENSE" ...
 ```
 
 With an upcoming GDAL release (3.7), we can even target different

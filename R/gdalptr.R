@@ -21,7 +21,7 @@ GDALOpen<- function(dsn = NULL) {
   if (!nzchar(dsn[1]) || is.na(dsn[1])) stop("invalid dsn")
   ds <- GDALDataset()
   
-    .Call("GdalPtrOpen", ds, dsn[1])
+    .Call("GdalPtrGDALOpen", ds, dsn[1])
 }
 
 
@@ -48,7 +48,7 @@ GDALGetRasterSize <- function(x) {
 #' @examples
 #' GDALVersion()
 GDALVersion <- function() {
-  .Call("GdalVersion")
+  .Call("GdalPtrGDALVersionInfo")
 }
 
 
@@ -74,7 +74,7 @@ GDALVersion <- function() {
 #'    }
 #'   }
 GDALVSIReadDirRecursive <- function(vsiname) {
-  .Call("GdalVSIReadDirRecursive", vsiname)
+  .Call("GdalPtrVSIReadDirRecursive", vsiname)
 }
 new_env <- function() {
   new.env(parent = emptyenv())
