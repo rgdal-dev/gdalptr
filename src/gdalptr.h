@@ -59,10 +59,12 @@ static inline SEXP gdalptr_allocate_xptr(SEXP shelter_sexp = R_NilValue) {
 
 template <typename T>
 static inline void gdalptr_xptr_default_finalize(SEXP xptr) {
+  Rprintf("gdalptr dataset finalizer called to free the C pointer memory\n"); 
   T* ptr = reinterpret_cast<T*>(R_ExternalPtrAddr(xptr));
   if (ptr != nullptr) {
     free(ptr);
   }
+  R_ClearExternalPtr(xptr); 
 }
 
 static inline const char* gdalptr_as_const_char(SEXP sexp) {

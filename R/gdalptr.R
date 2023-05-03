@@ -7,6 +7,7 @@ GDALDataset <- function() {
 #' Open a GDAL dataset from a dsn
 #'
 #' @param dsn character, description of a file path, url, etc. 
+#' @param read_only default is `TRUE` open the dsn in read-only mode
 #'
 #' @return an external pointer 
 #' @export
@@ -24,6 +25,9 @@ GDALOpen<- function(dsn = NULL, read_only = TRUE) {
     .Call("GdalPtrGDALOpen", ds, dsn[1], read_only[1L])
 }
 
+GDALClose<- function(x) {
+  .Call("GdalPtrGDALClose", x)
+}
 
 #' Get the number of columns of  data set opened with gdalptr::GDALOpen()
 #'
@@ -42,8 +46,15 @@ GDALGetRasterSize <- function(x) {
 
 
 GDALRasterIO <- function(x, window, data = NULL, resample_algo = "nearestneighbour") {
+  stopifnot(all(window >= 0))
+  stopifnot(length(window) == 4L || length(window) == 6L)
+  if (length(window) == 4L) window <- c(window, window[3:4])
+  window <- as.integer(window)
   .Call("GdalPtrRasterIO", x, as.integer(window), data, resample_algo)
 }
+
+
+
 #' Get the GDAL version string
 #' 
 #' @return character vector describing GDAL version

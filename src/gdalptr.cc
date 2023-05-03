@@ -59,17 +59,30 @@ extern "C" SEXP GdalPtrGDALOpen(SEXP dataset_xptr, SEXP dsn_name_sexp, SEXP read
   GDALAllRegister();
   const char* dsn_name = gdalptr_as_const_char(dsn_name_sexp);      
   auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
-  bool write = asLogical(read_only); 
-  if (write) {
-    dataset =  (GDALDataset *)GDALOpen(dsn_name, GA_Update);
-  } else {
-    
+  bool read = asLogical(read_only); 
+  if (read) {
     dataset =  (GDALDataset *)GDALOpen(dsn_name, GA_ReadOnly);
+  } else {
+    dataset =  (GDALDataset *)GDALOpen(dsn_name, GA_Update);
   }
   
   R_SetExternalPtrAddr(dataset_xptr, dataset); 
   //Rprintf("Raster count: %i\n", (int) dataset->GetRasterCount()); 
   return dataset_xptr;
+}
+
+extern "C" SEXP GdalPtrGDALClose(SEXP dataset_xptr) {
+  auto dataset = gdalptr_from_xptr<GDALDataset>(dataset_xptr);
+   if (dataset != nullptr) {
+     GDALClose(dataset); 
+   } 
+   SEXP result = PROTECT(Rf_allocVector(INTSXP, 1)); 
+   INTEGER(result)[0] = NA_INTEGER;
+
+
+
+  UNPROTECT(1); 
+    return result;
 }
 
 
@@ -104,9 +117,9 @@ extern "C" SEXP GdalPtrRasterIO(SEXP dataset_xptr, SEXP window, SEXP data, SEXP 
   //double * data[nx * ny * nbands]; 
   
   
-  double *padScanline;
+  int *paiScanline;
   int n = nx * ny * nbands; 
-  padScanline = (double *) CPLMalloc(sizeof(double) * static_cast<size_t>(n));
+  paiScanline = (int*) CPLMalloc(sizeof(int) * static_cast<size_t>(n));
   
   CPLErr err; 
   GDALRasterIOExtraArg psExtraArg;
@@ -116,30 +129,41 @@ extern "C" SEXP GdalPtrRasterIO(SEXP dataset_xptr, SEXP window, SEXP data, SEXP 
   SEXP result; 
   if (isNull(data)) {
     Rprintf("data is NULL\n"); 
-    err = dataset->RasterIO( GF_Read , offx, offy, xn, yn,
-                             &padScanline[0], nx, ny, GDT_Float64,
-                             0, 0, 
-                             0, 0, 0, &psExtraArg);
+    // when its a Band
+    // err = dataset->GetRasterBand(1)->RasterIO( GF_Read , offx, offy, xn, yn,
+    //                          &paiScanline[0], nx, ny, GDT_Int32,
+    //                          0, 0, &psExtraArg); 
     
-    result = PROTECT(Rf_allocVector(REALSXP, n));
+    err = dataset->RasterIO( GF_Read , offx, offy, xn, yn,
+                                 &paiScanline[0], nx, ny, GDT_Int32,
+                             nbands,   // nBandCount
+                              NULL,     // panBandMap
+                              0, 0, 0,  // nPixelSpace,nLineSpace,nBandSpace
+                              &psExtraArg);
+    
+    Rprintf("%i\n", paiScanline[0]); 
+    result = PROTECT(Rf_allocVector(INTSXP, n));
     for (int i = 0; i < n; i++) {
       
-      REAL(result)[i] = padScanline[i];
+      INTEGER(result)[i] = paiScanline[i];
       
     }
     
   } else {
-    Rprintf("data is REAL\n"); 
-    // user passed in a real vector
+    Rprintf("data is INTEGER\n"); 
+    // user passed in integer vector
     for (int i = 0; i < n; i++) {
-      padScanline[i] = REAL(data)[i];
+      paiScanline[i] = INTEGER(data)[i];
     }
     err = dataset->RasterIO( GF_Write, offx, offy, xn, yn,
-                             &padScanline[0], nx, ny, GDT_Float64,
-                             0, 0, 
-                             0, 0, 0, &psExtraArg);
+                             &paiScanline[0], nx, ny, GDT_Int32,
+                             nbands,   // nBandCount
+                             NULL,     // panBandMap
+                             0, 0, 0,  // nPixelSpace,nLineSpace,nBandSpace
+                             &psExtraArg);
     
-    result = PROTECT(Rf_allocVector(REALSXP, 1)); 
+    result = PROTECT(Rf_allocVector(INTSXP, 1)); 
+    INTEGER(result)[0] = NA_INTEGER;
   }
   
   

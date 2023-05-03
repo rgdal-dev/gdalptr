@@ -51,6 +51,7 @@ The recursive VSI listing will tell us what files live in a tarball, a zip, a ur
 
 ```{r recursive}
 tarball <-  pak::cache_list()$fullpath[1]
+basename(tarball)
 fs <- GDALVSIReadDirRecursive(file.path("/vsitar", tarball))
 str(fs)
 ```

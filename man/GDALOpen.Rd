@@ -8,6 +8,8 @@ GDALOpen(dsn = NULL, read_only = TRUE)
 }
 \arguments{
 \item{dsn}{character, description of a file path, url, etc.}
+
+\item{read_only}{default is \code{TRUE} open the dsn in read-only mode}
 }
 \value{
 an external pointer

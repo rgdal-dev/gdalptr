@@ -43,6 +43,10 @@ zip, a url endpoint, etc
 
 ``` r
 tarball <-  pak::cache_list()$fullpath[1]
+#> gdalptr dataset finalizer called to free the C pointer memory
+#> gdalptr dataset finalizer called to free the C pointer memory
+basename(tarball)
+#> [1] "jsonlite_1.8.4.tar.gz"
 fs <- GDALVSIReadDirRecursive(file.path("/vsitar", tarball))
 str(fs)
 #>  chr [1:197] "jsonlite/" "jsonlite/NAMESPACE" "jsonlite/LICENSE" ...
@@ -55,7 +59,7 @@ opening the dataset*.
 ``` r
 ## because I'm working with the dev source
 GDALVersion()
-#> [1] "GDAL 3.7.0dev-717dcc0eed, released 2023/04/22 (debug build)"
+#> [1] "GDAL 3.8.0dev-78e9c2fc49, released 2023/05/02"
 
 ## we can target an overview in this massive tile dataset
 GDALGetRasterSize(GDALOpen(sprintf("vrt://%s?ovr=12", dsn::wms_arcgis_mapserver_tms())))
