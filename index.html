@@ -87,6 +87,10 @@
 <p>The recursive VSI listing will tell us what files live in a tarball, a zip, a url endpoint, etc</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tarball</span> <span class="op">&lt;-</span>  <span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/cache.html" class="external-link">cache_list</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">fullpath</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="co">#&gt; gdalptr dataset finalizer called to free the C pointer memory</span></span>
+<span><span class="co">#&gt; gdalptr dataset finalizer called to free the C pointer memory</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">tarball</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "jsonlite_1.8.4.tar.gz"</span></span>
 <span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/GDALVSIReadDirRecursive.html">GDALVSIReadDirRecursive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"/vsitar"</span>, <span class="va">tarball</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">fs</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  chr [1:197] "jsonlite/" "jsonlite/NAMESPACE" "jsonlite/LICENSE" ...</span></span></code></pre></div>
@@ -94,7 +98,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## because I'm working with the dev source</span></span>
 <span><span class="fu"><a href="reference/GDALVersion.html">GDALVersion</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "GDAL 3.7.0dev-717dcc0eed, released 2023/04/22 (debug build)"</span></span>
+<span><span class="co">#&gt; [1] "GDAL 3.8.0dev-78e9c2fc49, released 2023/05/02"</span></span>
 <span></span>
 <span><span class="co">## we can target an overview in this massive tile dataset</span></span>
 <span><span class="fu"><a href="reference/GDALGetRasterSize.html">GDALGetRasterSize</a></span><span class="op">(</span><span class="fu"><a href="reference/GDALOpen.html">GDALOpen</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"vrt://%s?ovr=12"</span>, <span class="fu">dsn</span><span class="fu">::</span><span class="fu">wms_arcgis_mapserver_tms</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
